@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pranav's 2.5-Day MATLAB Neural Network Plan</title>
+<style>
+:root{--bg:#f7f8fb;--card:#fff;--tx:#1b1f2a;--mut:#5b6475;--ac:#2563eb;--bd:#e2e6ee;--code:#0f172a;--codetx:#e2e8f0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1218;--card:#181c25;--tx:#e8ebf2;--mut:#9aa3b5;--ac:#7aa2ff;--bd:#2a3040}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:820px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:1.7rem;margin:.2em 0}h2{margin-top:2em;font-size:1.35rem}h3{margin:1.2em 0 .3em;font-size:1.05rem}
+.sub{color:var(--mut)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;margin:12px 0}
+.t{display:inline-block;background:var(--ac);color:#fff;border-radius:6px;padding:0 8px;font-size:.8rem;font-weight:600;margin-right:6px}
+a{color:var(--ac);font-weight:500}
+pre{background:var(--code);color:var(--codetx);padding:12px;border-radius:10px;overflow-x:auto;font-size:.85rem;line-height:1.45}
+code{font-family:ui-monospace,Menlo,Consolas,monospace}
+ul{padding-left:1.2em}li{margin:.25em 0}
+.goal{border-left:4px solid var(--ac)}
+.help{background:rgba(37,99,235,.10);border-radius:8px;padding:10px 12px;margin-top:10px;font-size:.95rem}.help a{display:inline-block;margin:2px 0}
+label{display:flex;gap:8px;align-items:flex-start}
+</style></head><body><main>
+<h1>🧠 MATLAB Neural Networks in 2.5 Days</h1>
+<p class="sub">Plan for Pranav · Goal: becoming the master of the neural network.</p>
+
+<div class="card goal"><b>Before you start (15 min)</b>
+<ul>
+<li>Open <a href="https://matlab.mathworks.com" target="_blank" rel="noopener">MATLAB Online</a> (free tier available, nothing to install). Ask your school if they have a campus license too.</li>
+<li>In MATLAB, go to Add-Ons → Get Add-Ons and install: <b>Deep Learning Toolbox</b>, <b>Deep Learning Toolbox Model for ResNet-18 Network</b>, and <b>Image Processing Toolbox</b>.</li>
+<li>Collect images: <b>~100 cat photos and ~100 non-cat photos</b> (dogs, birds, objects). The model needs both to learn the difference.</li>
+</ul></div>
+
+<h2>Day 1 — MATLAB basics + your first neural network</h2>
+<div class="card"><span class="t">2 h</span><b>MATLAB fundamentals</b>
+<ul>
+<li>Do the free official course: <a href="https://matlabacademy.mathworks.com/details/matlab-onramp/gettingstarted" target="_blank" rel="noopener">MATLAB Onramp</a> (about 2 hours, interactive).</li>
+<li>Watch: <a href="https://www.youtube.com/results?search_query=MATLAB+tutorial+for+beginners+full+course" target="_blank" rel="noopener">MATLAB beginner tutorials on YouTube</a> (just skim topics you didn't get).</li>
+<li>Know by the end: variables, matrices, indexing, <code>plot</code>, scripts vs. functions, loading files.</li></ul></div>
+
+<div class="card"><span class="t">1 h</span><b>How neural networks actually work</b>
+<ul>
+<li>Watch: <a href="https://www.youtube.com/results?search_query=3Blue1Brown+neural+networks+chapter+1" target="_blank" rel="noopener">3Blue1Brown "But what is a neural network?" (series, ch. 1-4)</a>.</li>
+<li>Write in your own words: what are neurons, weights, loss, training, and epochs?</li></ul></div>
+
+<div class="card"><span class="t">1.5 h</span><b>Your first toolbox network (numbers, not images)</b>
+<ul><li>Watch: <a href="https://www.youtube.com/results?search_query=MATLAB+neural+network+toolbox+patternnet+tutorial" target="_blank" rel="noopener">MATLAB Neural Network Toolbox patternnet tutorial</a>.</li></ul>
+<pre><code>% Built-in practice data: classify iris flowers
+[x, t] = iris_dataset;          % x = inputs, t = correct answers
+net = patternnet(10);           % 1 hidden layer, 10 neurons
+net = train(net, x, t);         % TRAINING
+y = net(x);                     % OUTPUT (predictions)
+plotconfusion(t, y)             % how many did it get right?</code></pre>
+<p><b>Key idea:</b> input = <code>x</code>, the answers you give it = <code>t</code>, output = <code>y</code>. Image classification is the same idea with pictures.</p></div>
+
+<h2>Day 2 — Your cat classifier (images)</h2>
+<div class="card"><span class="t">1 h</span><b>Theory for images</b>
+<ul>
+<li>Do the free <a href="https://matlabacademy.mathworks.com/details/deep-learning-onramp/deeplearning" target="_blank" rel="noopener">Deep Learning Onramp</a>.</li>
+<li>Watch: <a href="https://www.youtube.com/results?search_query=convolutional+neural+networks+explained+simply" target="_blank" rel="noopener">Convolutional Neural Networks explained</a> and <a href="https://www.youtube.com/results?search_query=MATLAB+transfer+learning+deep+learning+tutorial" target="_blank" rel="noopener">MATLAB transfer learning</a>.</li>
+<li>Idea: with only 100 pictures, don't train from scratch. Start from <b>ResNet-18</b> (already learned to see) and retrain it for cats. This is called <i>transfer learning</i>.</li></ul></div>
+
+<div class="card"><span class="t">1 h</span><b>Organize your data (this is how you "give input")</b>
+<pre><code>pets/
+  cat/      (all cat pictures)
+  notcat/   (everything else)</code></pre>
+<p>The folder name becomes the label automatically.</p></div>
+
+<div class="card"><span class="t">3 h</span><b>Load, train, test</b>
+<pre><code>% 1. LOAD data (browse to your pets folder)
+imds = imageDatastore("pets", IncludeSubfolders=true, LabelSource="foldernames");
+[trainSet, valSet] = splitEachLabel(imds, 0.8, "randomized");
+
+% 2. RESIZE to what ResNet-18 expects
+trainAug = augmentedImageDatastore([224 224], trainSet, ColorPreprocessing="gray2rgb");
+valAug   = augmentedImageDatastore([224 224], valSet,   ColorPreprocessing="gray2rgb");
+
+% 3. BUILD network (2 outputs: cat / notcat)  -- needs R2024a or newer
+classNames = categories(imds.Labels);
+net = imagePretrainedNetwork("resnet18", NumClasses=numel(classNames));
+
+% 4. TRAIN
+opts = trainingOptions("adam", InitialLearnRate=1e-4, MaxEpochs=6, ...
+    MiniBatchSize=16, ValidationData=valAug, Plots="training-progress");
+net = trainnet(trainAug, net, "crossentropy", opts);
+
+% 5. TEST on a brand-new picture
+img = imread("mystery.jpg");
+img = imresize(img, [224 224]);
+scores = predict(net, single(img));
+label  = scores2label(scores, classNames)</code></pre>
+<p>If a line errors, copy the error message into Claude and I'll help fix it. Older MATLAB versions use a slightly different setup (<code>trainNetwork</code>); the Deep Learning Onramp shows that style.</p></div>
+
+<div class="card"><span class="t">1 h</span><b>Understand what happened</b>
+<ul><li>Read the training plot: accuracy up, loss down. What does it look like when it overfits (training great, validation bad)?</li></ul></div>
+
+<h2>Day 3 (half day) — Improve it and prepare to teach</h2>
+<div class="card"><span class="t">1.5 h</span><b>Make it better</b>
+<ul>
+<li>Add more varied photos, and test on pictures it has never seen.</li>
+<li>Try data augmentation (flip, rotate, crop): <a href="https://www.youtube.com/results?search_query=MATLAB+image+data+augmentation+deep+learning" target="_blank" rel="noopener">MATLAB data augmentation videos</a>.</li>
+<li>Check the confusion matrix: <code>confusionchart(valSet.Labels, scores2label(predict(net, single(readall(valAug).input)) ,classNames))</code> (or use the examples in the Onramp).</li>
+<li>Try 3 classes (cat / dog / bird).</li></ul></div>
+
+<div class="card"><span class="t">1 h</span><b>Teach it (the real test of mastery)</b>
+<ul>
+<li>Explain out loud, to a friend, to a parent, or to a mirror: data → labels → train → test → predict.</li>
+<li>Be able to answer: Why split train/validation? What is overfitting? Why transfer learning? What is an epoch?</li>
+<li>Make a 5-slide mini lesson using your own cat project as the demo.</li></ul></div>
+
+<h2>📘 Beginner Guide: write the code yourself, step by step</h2>
+<p class="sub">Read this alongside Day 2. Type the code yourself instead of only pasting it, because that's how it sticks.</p>
+<div class="card goal"><b>🔗 How to read the links</b><br>▶ = exact video (opens that video directly; I opened these pages and confirmed they exist).<br>📄 = official MathWorks guide page.<br>🔎 = YouTube search, used only where I couldn't confirm one exact video. Pick any good result.<br><small>Heads-up: the MathWorks "10 lines" video is older and may use older function names (like <code>trainNetwork</code>). The idea is identical to Steps 5 to 7, but copy code from this page, not from the video.</small></div>
+
+
+
+<div class="card goal"><h3>🧭 Big picture first (read this before the steps)</h3>
+<p>A neural network is a program that learns from examples instead of rules. You don't tell it "cats have pointy ears". You show it 100 cat pictures marked "cat" and 100 other pictures marked "not cat". It guesses, checks, corrects itself, and repeats thousands of times until it gets good. Then you show it a new picture and it answers.</p>
+<p><b>The whole project is 4 things:</b> 1) get pictures + labels → 2) load them into MATLAB → 3) train → 4) test on new pictures. Every step below is just one of these.</p>
+<div class="help"><b>🎥 Watch:</b> <a href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">▶ 3Blue1Brown: But what is a neural network? (19 min)</a> · <a href="https://www.youtube.com/watch?v=IHZwWFHWa-w" target="_blank" rel="noopener">▶ 3Blue1Brown: Gradient descent, how neural networks learn (21 min)</a> · <a href="https://www.mathworks.com/videos/series/deep-learning-for-engineers.html" target="_blank" rel="noopener">▶ MathWorks: Deep Learning for Engineers (5 videos)</a></div></div>
+
+<div class="card"><h3>📥 Step A · How to find the data you want on the internet</h3>
+<p>Whatever you want the model to recognise (cats, cars, leaves, handwriting...), the process is the same: find pictures of it, sorted by label.</p>
+
+<h3>1. Search dataset websites (best way)</h3>
+<ul>
+<li><a href="https://www.kaggle.com/datasets" target="_blank" rel="noopener">Kaggle Datasets</a>: huge library, search any topic. Free account needed.</li>
+<li><a href="https://datasetsearch.research.google.com" target="_blank" rel="noopener">Google Dataset Search</a>: like Google, but only for datasets.</li>
+<li><a href="https://huggingface.co/datasets" target="_blank" rel="noopener">Hugging Face Datasets</a>: filter by "Image Classification".</li>
+<li><a href="https://universe.roboflow.com" target="_blank" rel="noopener">Roboflow Universe</a>: many small, topic-specific image datasets.</li>
+<li><a href="https://paperswithcode.com/datasets" target="_blank" rel="noopener">Papers With Code Datasets</a> and <a href="https://storage.googleapis.com/openimages/web/index.html" target="_blank" rel="noopener">Open Images</a>: large research datasets.</li></ul>
+<p><b>Search tip:</b> type <code>your topic + image classification dataset</code> into Google or Kaggle, e.g. "plant leaf disease image classification dataset".</p>
+
+<h3>2. Collect your own</h3>
+<ul>
+<li>Take photos with your phone. Your own photos are great for testing.</li>
+<li>Save images from web searches by hand, or with a "download all images" browser extension. Many web images are copyrighted, so use them only for personal learning, not to publish or sell.</li></ul>
+
+<h3>3. Check a dataset before downloading</h3>
+<ul>
+<li><b>Labels:</b> are images sorted into folders by class, or is there a CSV file of labels?</li>
+<li><b>Size:</b> ~100 to 300 images per class is enough to start with transfer learning.</li>
+<li><b>License:</b> read the licence note (many are free for learning).</li>
+<li><b>Variety:</b> different angles, backgrounds and lighting.</li></ul>
+
+<h3>4. Get it into the format MATLAB likes</h3>
+<p>Unzip the download and arrange it as <b>one folder per class</b> (<code>pets/cat</code>, <code>pets/notcat</code>...), then upload it as in Step 1. If the dataset has a CSV of labels instead, you can attach labels yourself:</p>
+<pre><code>imds = imageDatastore("images");              % all pictures, no labels yet
+T = readtable("labels.csv");                  % columns like: filename,label
+% Check the order of the files matches T before doing this:
+imds.Labels = categorical(T.label);</code></pre>
+<p>Then continue from Step 2. The code doesn't change, whatever your topic is.</p><div class="help"><b>💡 In simple words:</b> Think of it like teaching a little kid with flashcards. You need lots of pictures, and each one needs the right name on it. A dataset is just a big box of already-labelled flashcards that someone else made for you.<br><b>🎥 Watch:</b> <a href="https://www.youtube.com/results?search_query=how+to+download+dataset+from+Kaggle" target="_blank" rel="noopener">🔎 search: download a Kaggle dataset</a> · <a href="https://www.youtube.com/results?search_query=how+to+use+Kaggle+datasets+for+beginners" target="_blank" rel="noopener">🔎 search: Kaggle for beginners</a></div>
+</div>
+
+<div class="card"><h3>Step 0 · Know the MATLAB screen</h3>
+<ul>
+<li><b>Command Window:</b> type one line, press Enter, it runs immediately. Good for testing.</li>
+<li><b>Editor:</b> Home → <b>New Script</b>. Write many lines here, then click <b>Run</b> (green triangle). Save as <code>cat_classifier.m</code>.</li>
+<li><b>Current Folder panel (left):</b> shows the files MATLAB can see. <b>Your data must be inside this folder.</b></li>
+<li><b>Workspace panel (right):</b> shows your variables.</li>
+<li><code>%</code> starts a comment (ignored by MATLAB). A <code>;</code> at the end of a line hides its output.</li></ul><div class="help"><b>💡 In simple words:</b> MATLAB is like a workshop. The Command Window is where you shout one instruction at a time. The Editor is where you write a whole recipe (a script) and then press Run so MATLAB does every line in order.<br><b>🎥 Watch:</b> <a href="https://in.mathworks.com/videos/matlab-overview-61923.html" target="_blank" rel="noopener">▶ MathWorks: What Is MATLAB? (1:37)</a> · <a href="https://in.mathworks.com/videos/first-steps-in-matlab-1735796972206.html" target="_blank" rel="noopener">▶ MathWorks: First Steps in MATLAB (1:39)</a> · <a href="https://in.mathworks.com/videos/writing-a-matlab-program-69023.html" target="_blank" rel="noopener">▶ MathWorks: How to Write a MATLAB Program (13:57)</a></div>
+</div>
+
+<div class="card"><h3>Step 1 · Put your data where MATLAB can find it</h3>
+<ol>
+<li>On your computer, make a folder called <code>pets</code>. Inside it, two folders: <code>cat</code> and <code>notcat</code>.</li>
+<li>Put ~100 cat photos in <code>cat</code> and ~100 other photos in <code>notcat</code> (.jpg or .png).</li>
+<li><b>MATLAB Online:</b> in the Current Folder panel, click Upload (or drag the whole <code>pets</code> folder in). <b>Desktop MATLAB:</b> put <code>pets</code> inside the folder MATLAB shows as current.</li>
+<li>Check it worked by typing in the Command Window:</li></ol>
+<pre><code>ls pets            % should show: cat  notcat
+ls pets/cat        % should list your cat pictures</code></pre>
+<p>If it says "not found", MATLAB is looking in a different folder. Type <code>pwd</code> to see where you are.</p><div class="help"><b>💡 In simple words:</b> MATLAB can only see files inside its Current Folder, like a person who can only see things in the room they're standing in. Folder names are how you tell it the answer: pictures in the folder called cat are cats.<br><b>🎥 Watch:</b> <a href="https://matlabacademy.mathworks.com/details/matlab-onramp/gettingstarted" target="_blank" rel="noopener">▶ MATLAB Onramp (free course, covers folders and files)</a> · <a href="https://www.youtube.com/results?search_query=MATLAB+Online+upload+files+folder" target="_blank" rel="noopener">🔎 search: upload files to MATLAB Online</a></div>
+</div>
+
+<div class="card"><h3>Step 2 · Load the data into MATLAB</h3>
+<pre><code>imds = imageDatastore("pets", IncludeSubfolders=true, LabelSource="foldernames");</code></pre>
+<ul>
+<li><code>imds</code> is just a name you choose. It becomes a "list of all your images" (a datastore); the images aren't all loaded into memory at once.</li>
+<li><code>"pets"</code> = the folder to read.</li>
+<li><code>IncludeSubfolders=true</code> = also look inside <code>cat</code> and <code>notcat</code>.</li>
+<li><code>LabelSource="foldernames"</code> = the folder name is the correct answer (label) for each picture.</li></ul>
+<p>Check it:</p>
+<pre><code>countEachLabel(imds)      % table: how many cat vs notcat
+img = readimage(imds, 1); % read the first picture
+imshow(img)               % look at it
+imds.Labels(1)            % its label</code></pre>
+<p><b>This is how you give the input.</b> The pictures are the input, and the folder names are the answers it learns from.</p><div class="help"><b>💡 In simple words:</b> imageDatastore makes a list (like a playlist) of all your picture files and remembers each one's label from its folder name. It doesn't open every picture yet, so your computer doesn't get overloaded.<br><b>🎥 Watch:</b> <a href="https://www.mathworks.com/help/deeplearning/ug/create-and-explore-datastore-for-image-classification.html" target="_blank" rel="noopener">📄 MathWorks guide: Create and Explore Datastore for Image Classification</a> · <a href="https://www.youtube.com/results?search_query=MATLAB+imageDatastore+tutorial" target="_blank" rel="noopener">🔎 search: imageDatastore</a></div>
+</div>
+
+<div class="card"><h3>Step 3 · Split into training and validation</h3>
+<pre><code>[trainSet, valSet] = splitEachLabel(imds, 0.8, "randomized");</code></pre>
+<p>80% of pictures go to <code>trainSet</code> (the model studies these). 20% go to <code>valSet</code> (a pop quiz with pictures it never studied). This tells you whether it really learned or just memorized.</p><div class="help"><b>💡 In simple words:</b> Like studying for an exam: you learn from your textbook (training set) but get tested with new questions (validation set). If you were tested on the exact same questions, you could just memorize the answers and fool yourself.<br><b>🎥 Watch:</b> <a href="https://www.youtube.com/results?search_query=train+validation+test+split+explained+simply" target="_blank" rel="noopener">🔎 search: train / validation / test split</a> · <a href="https://www.youtube.com/results?search_query=overfitting+explained+simply+machine+learning" target="_blank" rel="noopener">🔎 search: overfitting</a></div>
+</div>
+
+<div class="card"><h3>Step 4 · Resize the pictures</h3>
+<pre><code>trainAug = augmentedImageDatastore([224 224], trainSet, ColorPreprocessing="gray2rgb");
+valAug   = augmentedImageDatastore([224 224], valSet,   ColorPreprocessing="gray2rgb");</code></pre>
+<p>ResNet-18 only accepts 224×224 colour images. This line resizes every picture automatically, and <code>gray2rgb</code> converts any black-and-white photo to colour so nothing crashes.</p><div class="help"><b>💡 In simple words:</b> The network is built like a picture frame that only fits 224×224 pictures. Your photos come in all sizes, so this step squishes or stretches each one to fit the frame.<br><b>🎥 Watch:</b> <a href="https://www.mathworks.com/videos/series/deep-learning-for-engineers.html" target="_blank" rel="noopener">▶ MathWorks: Deep Learning for Engineers (covers preparing data)</a> · <a href="https://www.youtube.com/results?search_query=MATLAB+augmentedImageDatastore+resize+images" target="_blank" rel="noopener">🔎 search: augmentedImageDatastore</a></div>
+</div>
+
+<div class="card"><h3>Step 5 · Create the network</h3>
+<pre><code>classNames = categories(imds.Labels);   % {"cat"; "notcat"}
+net = imagePretrainedNetwork("resnet18", NumClasses=numel(classNames));</code></pre>
+<p>This downloads ResNet-18 (a network already trained on 1 million pictures) and replaces its last layer with a layer that has <b>2 outputs: cat and notcat</b>. This is the output layer you asked about. Its size = number of classes.</p><div class="help"><b>💡 In simple words:</b> Imagine hiring someone who already knows how to see (edges, shapes, fur, eyes) from looking at a million photos. You only teach them the last bit: your 2 categories. That's transfer learning, and it's why 100 photos are enough.<br><b>🎥 Watch:</b> <a href="https://www.mathworks.com/videos/deep-learning-with-matlab-transfer-learning-in-10-lines-of-matlab-code-1487714838381.html" target="_blank" rel="noopener">▶ MathWorks: Transfer Learning in 10 Lines of Code (4:41)</a> · <a href="https://www.mathworks.com/discovery/transfer-learning.html" target="_blank" rel="noopener">📄 MathWorks: What is transfer learning?</a></div>
+</div>
+
+<div class="card"><h3>Step 6 · Training settings, then train</h3>
+<pre><code>opts = trainingOptions("adam", ...
+    InitialLearnRate=1e-4, ...   % how big each learning step is
+    MaxEpochs=6, ...             % how many times it sees all pictures
+    MiniBatchSize=16, ...        % pictures processed at a time
+    ValidationData=valAug, ...
+    Plots="training-progress");
+
+net = trainnet(trainAug, net, "crossentropy", opts);</code></pre>
+<p>A window opens showing a live graph. <b>Accuracy should go up and loss should go down.</b> The <code>...</code> just continues a line onto the next one. Training can take a few minutes.</p><div class="help"><b>💡 In simple words:</b> Training = the network guesses, checks the right answer, and adjusts itself a tiny bit, over and over. Epoch = one full pass through all your pictures. Learning rate = how big each adjustment is. Batch size = how many pictures it looks at before adjusting.<br><b>🎥 Watch:</b> <a href="https://www.youtube.com/watch?v=IHZwWFHWa-w" target="_blank" rel="noopener">▶ 3Blue1Brown: Gradient descent, how networks learn</a> · <a href="https://www.mathworks.com/videos/series/deep-learning-for-engineers.html" target="_blank" rel="noopener">▶ MathWorks: Deep Learning for Engineers (training a network)</a> · <a href="https://www.youtube.com/results?search_query=epoch+batch+size+learning+rate+explained" target="_blank" rel="noopener">🔎 search: epochs, batch size, learning rate</a></div>
+</div>
+
+<div class="card"><h3>Step 7 · Test on a new picture (get the output)</h3>
+<p>Browse for a picture with a file-chooser window:</p>
+<pre><code>[file, folder] = uigetfile({"*.jpg;*.png"}, "Pick a picture");
+img = imread(fullfile(folder, file));
+imgSmall = imresize(img, [224 224]);
+scores = predict(net, dlarray(single(imgSmall), "SSC"));
+label = scores2label(scores, classNames);
+
+imshow(img)
+title("I think this is: " + string(label))</code></pre>
+<p>On MATLAB Online, if the chooser doesn't open, upload the picture and use <code>img = imread("mystery.jpg");</code> instead. Never use a photo from your training folder, since that's cheating. Use a fresh one.</p><div class="help"><b>💡 In simple words:</b> This is the exam day. You pick a brand-new picture, the network gives a score for each category, and scores2label picks the category with the highest score. That's the output.<br><b>🎥 Watch:</b> <a href="https://www.mathworks.com/videos/deep-learning-with-matlab-transfer-learning-in-10-lines-of-matlab-code-1487714838381.html" target="_blank" rel="noopener">▶ MathWorks: Transfer Learning in 10 Lines of Code (shows testing a picture)</a> · <a href="https://matlabacademy.mathworks.com/details/deep-learning-onramp/deeplearning" target="_blank" rel="noopener">▶ Deep Learning Onramp (free, hands-on)</a></div>
+</div>
+
+<div class="card"><h3>Step 8 · Save your trained model</h3>
+<pre><code>save("catModel.mat", "net", "classNames");   % save
+load("catModel.mat");                         % load it later, no retraining</code></pre><div class="help"><b>💡 In simple words:</b> Training takes time, so you save the brain to a file (catModel.mat) and load it later instead of training again, like saving a game.<br><b>🎥 Watch:</b> <a href="https://www.youtube.com/results?search_query=MATLAB+save+load+mat+file+tutorial" target="_blank" rel="noopener">🔎 search: save and load .mat files</a></div>
+</div>
+
+<div class="card"><h3>Common errors and fixes</h3>
+<ul>
+<li><b>"Unrecognized function imagePretrainedNetwork":</b> your MATLAB is older than R2024a, so tell me your version and I'll rewrite it.</li>
+<li><b>"Unable to find or open pets":</b> wrong folder. Use <code>pwd</code> and <code>ls</code>.</li>
+<li><b>ResNet-18 not found:</b> install the "Deep Learning Toolbox Model for ResNet-18 Network" add-on.</li>
+<li><b>Low accuracy:</b> add more varied pictures, and make sure <code>notcat</code> has lots of different things.</li></ul></div>
+
+<h2>Checklist</h2>
+<div class="card">
+<label><input type="checkbox"> I finished MATLAB Onramp</label>
+<label><input type="checkbox"> I trained patternnet on iris data</label>
+<label><input type="checkbox"> I finished Deep Learning Onramp</label>
+<label><input type="checkbox"> My cat classifier works on new pictures</label>
+<label><input type="checkbox"> I explained it to someone else</label>
+</div>
+
+<p class="sub">Next steps after this: MathWorks "Deep Learning Specialization" on Coursera (can audit), Andrew Ng's ML course, then try Python/PyTorch.</p>
+</main></body></html>
